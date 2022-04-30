@@ -15,7 +15,7 @@ class CreateProjectsTable extends Migration
             $table->string('name');
             $table->longText('url');
             $table->foreignIdFor(User::class);
-
+            $table->timestamp('last_checked_at')->nullable();
             $table->timestamps();
 
             $table->index('name');

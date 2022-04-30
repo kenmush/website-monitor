@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Events\ProjectCreatedEvent;
+use App\Events\ProjectUpdatedEvent;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,6 +57,32 @@ class ProjectTest extends TestCase
                         ],
                 ],
         ]);
-        $response->assertJsonCount(3,'data');
+        $response->assertJsonCount(3, 'data');
+    }
+
+    /** @test */
+    public function it_can_update_a_project()
+    {
+        Event::fake();
+
+        $this->actingAs($user = User::factory()->create());
+        $project = Project::factory()->create([
+                'user_id' => $user->id,
+                'name'    => 'Old Project',
+                'url'     => 'http://old.com',
+        ]);
+
+        $response = $this->put(route('project.update', $project->id), [
+                'name' => 'Project Name',
+                'url'  => 'http://project.com',
+        ]);
+
+        $this->assertDatabaseHas('projects', [
+                'name' => 'Project Name',
+                'url'  => 'http://project.com',
+        ]);
+
+        Event::assertDispatched(ProjectUpdatedEvent::class);
+
     }
 }
