@@ -48,6 +48,7 @@ class ProjectsController extends Controller
 
     public function update(Request $request, Project $project)
     {
+        $this->authorize('update', $project);
         $this->validate($request, [
             'name' => 'required|max:255',
             'url'  => 'required|active_url',
@@ -63,6 +64,8 @@ class ProjectsController extends Controller
 
     public function destroy(Project $project)
     {
+        $this->authorize('delete', $project);
+
         $project->delete();
 
         ProjectDeletedEvent::dispatch($project);

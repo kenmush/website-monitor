@@ -88,6 +88,26 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
+    public function it_cannot_update_a_project_you_dont_own()
+    {
+        Event::fake();
+
+        $this->actingAs($user = User::factory()->create());
+        $project = Project::factory()->create([
+                'name'    => 'Old Project',
+                'url'     => 'http://old.com',
+        ]);
+
+        $response = $this->put(route('project.update', $project->id), [
+                'name' => 'Project Name',
+                'url'  => 'http://project.com',
+        ]);
+
+        $response->assertStatus(403);
+
+    }
+
+    /** @test */
     public function it_can_delete_a_project()
     {
         Event::fake();

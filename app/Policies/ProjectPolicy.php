@@ -32,7 +32,7 @@ class ProjectPolicy
 
     public function update(User $user, Project $project)
     {
-        return true;
+        return $user->id === $project->user_id;
     }
 
     public function delete(User $user, Project $project)
@@ -42,7 +42,7 @@ class ProjectPolicy
 
     public function restore(User $user, Project $project)
     {
-        return true;
+        return $project->user_id === $user->id;
     }
 
     public function forceDelete(User $user, Project $project)
