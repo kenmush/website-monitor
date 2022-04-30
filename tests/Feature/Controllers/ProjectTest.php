@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Events\ProjectCreatedEvent;
+use App\Events\ProjectDeletedEvent;
 use App\Events\ProjectUpdatedEvent;
 use App\Models\Project;
 use App\Models\User;
@@ -83,6 +84,29 @@ class ProjectTest extends TestCase
         ]);
 
         Event::assertDispatched(ProjectUpdatedEvent::class);
+
+    }
+
+    /** @test */
+    public function it_can_delete_a_project()
+    {
+        Event::fake();
+
+        $this->actingAs($user = User::factory()->create());
+        $project = Project::factory()->create([
+                'user_id' => $user->id,
+                'name'    => 'Old Project',
+                'url'     => 'http://old.com',
+        ]);
+
+        $response = $this->delete(route('project.destroy', $project->id));
+
+        $this->assertDatabaseMissing('projects', [
+                'name' => 'Old Project',
+                'url'  => 'http://old.com',
+        ]);
+
+        Event::assertDispatched(ProjectDeletedEvent::class);
 
     }
 }

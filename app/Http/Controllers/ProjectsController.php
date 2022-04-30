@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ProjectCreatedEvent;
+use App\Events\ProjectDeletedEvent;
 use App\Events\ProjectUpdatedEvent;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
@@ -62,6 +63,10 @@ class ProjectsController extends Controller
 
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+
+        ProjectDeletedEvent::dispatch($project);
+
+        return response()->json(null,204);
     }
 }
