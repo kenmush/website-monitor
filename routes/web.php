@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\ReportTypesController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,6 +20,10 @@ Route::middleware([
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::resource('project',ProjectsController::class);
+
+    Route::resource('project', ProjectsController::class);
+
+    Route::resource('report-types', ReportTypesController::class);
+
 });
 

@@ -94,8 +94,8 @@ class ProjectTest extends TestCase
 
         $this->actingAs($user = User::factory()->create());
         $project = Project::factory()->create([
-                'name'    => 'Old Project',
-                'url'     => 'http://old.com',
+                'name' => 'Old Project',
+                'url'  => 'http://old.com',
         ]);
 
         $response = $this->put(route('project.update', $project->id), [
@@ -129,4 +129,5 @@ class ProjectTest extends TestCase
         Event::assertDispatched(ProjectDeletedEvent::class);
 
     }
+
 }
